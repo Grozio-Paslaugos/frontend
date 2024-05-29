@@ -7,15 +7,6 @@ import RegisterButton from "./Components/Buttons/RegisterButton";
 import LoginButton from "./Components/Buttons/LoginButton";
 
 function App() {
-  return (
-    <>
-      {<RegisterButton />}
-      {<LoginButton />}
-    </>
-import Header from "./Components/Header/Header";
-import ProceduresList from "../src/Components/UserProcedureList/UserProceduresList";
-
-function App() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
