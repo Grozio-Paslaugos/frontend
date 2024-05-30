@@ -96,6 +96,14 @@ const Header = () => {
               >
                 My Procedures
               </Button>
+              <Button
+                className={`${classes.linkButton}`}
+                onClick={() => navigate("/create-procedure")} // Navigate to createProcedure
+                size="xs"
+                variant="link"
+              >
+                Create Procedure
+              </Button>
             </HoverCard>
           </Group>
 

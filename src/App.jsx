@@ -9,6 +9,8 @@ import UserProceduresList from "../src/Components/UserProcedureList/UserProcedur
 import MainLayout from "./Components/MainLayout/MainLayout";
 import Home from "./Components/Home/Home";
 import LoginModal from "./Components/Modals/LoginModal";
+import ProceduresList from "../src/Components/UserProcedureList/UserProceduresList";
+import CreateProcedure from "./Components/CreateProcedure/CreateProcedure";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -45,6 +47,7 @@ function App() {
             </>
           }
         />
+        <Route path="/create-procedure" element={<CreateProcedure />} />
       </Routes>
     </Router>
   );
