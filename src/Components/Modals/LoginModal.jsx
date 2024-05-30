@@ -1,6 +1,8 @@
 import FormModal from "./FormModal";
+import { useDisclosure } from "@mantine/hooks";
 
 export default function LoginModal({ opened, onClose }) {
+  const [openedmodal, { open, close }] = useDisclosure(false);
   const handleLogin = (formData) => {
     console.log("Login data:", formData);
   };
@@ -24,8 +26,8 @@ export default function LoginModal({ opened, onClose }) {
 
   return (
     <FormModal
-      opened={opened}
-      onClose={onClose}
+      opened={open}
+      onClose={close}
       title="Login"
       fields={fields}
       onSubmit={handleLogin}

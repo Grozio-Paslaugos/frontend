@@ -31,7 +31,7 @@ export default function FormModal({
   return (
     <Modal opened={opened} onClose={onClose} title={title} size="lg">
       <form onSubmit={handleSubmit}>
-        {fields.map((field) => (
+        {fields.map((field, index) => (
           <TextInput
             key={field.name}
             label={field.label}
@@ -42,6 +42,7 @@ export default function FormModal({
             onChange={handleChange}
             required={field.required}
             type={field.type}
+            data-autofocus={index === 0 ? true : undefined}
           />
         ))}
         <Button type="submit" variant="default" mt="md" mb="lg">
