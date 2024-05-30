@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
 import Header from "./Components/Header/Header";
 import ProceduresList from "../src/Components/UserProcedureList/UserProceduresList";
+import CreateProcedure from "./Components/CreateProcedure/CreateProcedure";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -28,6 +29,7 @@ function App() {
             </>
           }
         />
+        <Route path="/create-procedure" element={<CreateProcedure />} />
       </Routes>
     </Router>
   );
