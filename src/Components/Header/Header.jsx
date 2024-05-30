@@ -17,7 +17,6 @@ import { IconChevronDown } from "@tabler/icons-react";
 import classes from "./Header.module.css";
 import { useNavigate } from "react-router-dom";
 import { useDisclosure } from "@mantine/hooks";
-import LoginButton from "../Buttons/LoginButton";
 
 const Header = () => {
   const navigate = useNavigate();
