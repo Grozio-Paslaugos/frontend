@@ -91,6 +91,7 @@ const Header = () => {
                 className={`${classes.linkButton}`}
                 onClick={() => navigate("/my-procedures")} // Navigate to UserProceduresList
                 size="xs"
+                href=""
                 variant="link"
               >
                 My Procedures

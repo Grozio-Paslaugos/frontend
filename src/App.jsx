@@ -4,7 +4,9 @@ import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
 import Header from "./Components/Header/Header";
-import ProceduresList from "../src/Components/UserProcedureList/UserProceduresList";
+import UserProceduresList from "../src/Components/UserProcedureList/UserProceduresList";
+import MainLayout from "./Components/MainLayout/MainLayout";
+import Home from "./Components/Home/Home";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -19,7 +21,10 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/myProcedures" element={<ProceduresList />} /> {}
+        <Route path="/" element={<MainLayout />}>
+          <Route index element={<Home />} />
+          <Route path="my-procedures" element={<UserProceduresList />} />
+        </Route>
         <Route
           path="*"
           element={
