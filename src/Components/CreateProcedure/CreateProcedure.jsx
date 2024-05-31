@@ -15,7 +15,7 @@ import {
 import { useForm } from "@mantine/form";
 import { DateTimePicker } from "@mantine/dates";
 import classes from "./CreateProcedure.module.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const CreateProcedure = () => {
   const [dropdownValue, setDropdownValue] = useState("Not Selected");
@@ -37,11 +37,40 @@ const CreateProcedure = () => {
       {item}
     </Combobox.Option>
   ));
+  const postProcedure = async (procedure) => {
+    const token =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NTliNTA1OGI2ZmFhN2UwNzdiN2FjNiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTcxNzE1ODQyMiwiZXhwIjoxNzE3MTYyMDIyfQ.6bYCnfM2ygttJE351pYOq0H2enS9BleFtAxd-8AmIx4";
+    console.log(
+      procedure.Category,
+      procedure.Date,
+      procedure.Image,
+      procedure.Name
+    );
+    try {
+      fetch("http://localhost:5000/api/procedures/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          name: procedure.Name,
+          category: procedure.Category,
+          date: procedure.Date,
+          image: procedure.Image,
+        }),
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
   function formHandler(values, dropdownValue) {
     const procedure = values;
     procedure.Category = dropdownValue;
+    procedure.Date = procedure.Date.toString();
     form.reset();
     console.log(procedure); // Final Result
+    postProcedure(procedure);
   }
   return (
     <Container fluid>
