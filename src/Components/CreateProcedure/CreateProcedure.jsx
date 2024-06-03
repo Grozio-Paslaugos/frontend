@@ -38,8 +38,7 @@ const CreateProcedure = () => {
     </Combobox.Option>
   ));
   const postProcedure = async (procedure) => {
-    const token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NTliNTA1OGI2ZmFhN2UwNzdiN2FjNiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTcxNzE1ODQyMiwiZXhwIjoxNzE3MTYyMDIyfQ.6bYCnfM2ygttJE351pYOq0H2enS9BleFtAxd-8AmIx4";
+    const token = localStorage.getItem("token");
     console.log(
       procedure.Category,
       procedure.Date,
