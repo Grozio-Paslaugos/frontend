@@ -7,12 +7,7 @@ export default function LoginModal({ opened, onClose }) {
   const [openedmodal, { open, close }] = useDisclosure(false);
 
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const handleLogin = async (formData) => {
-    setEmail(formData.email);
-    setPassword(formData.password);
     try {
       const response = await fetch("http://localhost:5000/api/users/login", {
         method: "POST",
@@ -20,7 +15,10 @@ export default function LoginModal({ opened, onClose }) {
           "Content-Type": "application/json",
         },
 
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
       });
       if (!response.ok) {
         throw new Error("Failed to login");
@@ -36,8 +34,8 @@ export default function LoginModal({ opened, onClose }) {
       localStorage.setItem("user", JSON.stringify(user));
       navigate("/");
     } catch (error) {
+      alert("Failed to login. Please check your credentials.");
       console.error("Login error", error);
-      setError("Failed to login. Please check your credentials.");
     }
   };
   const fields = [

@@ -1,9 +1,11 @@
 import FormModal from "./FormModal";
 import React, { useState } from "react";
+import { useDisclosure } from "@mantine/hooks";
 import { useNavigate } from "react-router-dom";
 
 export default function RegisterModal({ opened, onClose }) {
   const navigate = useNavigate();
+  const [openedmodal, { open, close }] = useDisclosure(false);
   const [error, setError] = useState("");
 
   const handleRegister = async (formData) => {
@@ -64,8 +66,8 @@ export default function RegisterModal({ opened, onClose }) {
 
   return (
     <FormModal
-      opened={opened}
-      onClose={onClose}
+      opened={open}
+      onClose={close}
       title="Register"
       fields={fields}
       onSubmit={handleRegister}
