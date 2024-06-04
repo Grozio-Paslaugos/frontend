@@ -1,6 +1,6 @@
 /** @format */
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   HoverCard,
   Group,
@@ -24,6 +24,19 @@ const Header = () => {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
     useDisclosure(false);
   const [linksOpened, { toggle: toggleLinks }] = useDisclosure(false);
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    navigate("/");
+    setUser(null);
+  };
 
   return (
     <Box pb={40} mt={20}>
@@ -87,40 +100,56 @@ const Header = () => {
                   </Button>
                 </SimpleGrid>
               </HoverCard.Dropdown>
-              <Button
-                className={`${classes.linkButton}`}
-                onClick={() => navigate("/my-procedures")} // Navigate to UserProceduresList
-                size="xs"
-                href=""
-                variant="link"
-              >
-                My Procedures
-              </Button>
-              <Button
-                className={`${classes.linkButton}`}
-                onClick={() => navigate("/create-procedure")} // Navigate to createProcedure
-                size="xs"
-                variant="link"
-              >
-                Create Procedure
-              </Button>
+              {user !== null && user.role === "user" && (
+                <Button
+                  className={`${classes.linkButton}`}
+                  onClick={() => navigate("/my-procedures")} // Navigate to UserProceduresList
+                  size="xs"
+                  href=""
+                  variant="link"
+                >
+                  My Procedures
+                </Button>
+              )}
+              {user !== null && user.role === "admin" && (
+                <Button
+                  className={`${classes.linkButton}`}
+                  onClick={() => navigate("/create-procedure")} // Navigate to createProcedure
+                  size="xs"
+                  variant="link"
+                >
+                  Create Procedure
+                </Button>
+              )}
             </HoverCard>
           </Group>
 
           <Group visibleFrom="sm">
-            <Button
-              className={`${classes.linkButton}`}
-              onClick={() => navigate("/login")}
-              variant="default"
-            >
-              Log in
-            </Button>
-            <Button
-              className={`${classes.linkButton}`}
-              onClick={() => navigate("/register")}
-            >
-              Register
-            </Button>
+            {user === null && (
+              <Button
+                className={`${classes.linkButton}`}
+                onClick={() => navigate("/login")}
+                variant="default"
+              >
+                Log in
+              </Button>
+            )}
+            {user === null && (
+              <Button
+                className={`${classes.linkButton}`}
+                onClick={() => navigate("/register")}
+              >
+                Register
+              </Button>
+            )}
+            {user !== null && (
+              <Button
+                className={`${classes.linkButton}`}
+                onClick={() => handleLogout()}
+              >
+                Logout
+              </Button>
+            )}
           </Group>
 
           <Burger

@@ -73,9 +73,6 @@ const CreateProcedure = () => {
   }
   return (
     <Container fluid>
-      <a className={classes.link} href="/" onClick={() => navigate("/")}>
-        Home
-      </a>
       <Title align="center" mb="lg">
         Create Procedure
       </Title>
