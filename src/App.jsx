@@ -11,10 +11,12 @@ import Home from "./Components/Home/Home";
 import LoginModal from "./Components/Modals/LoginModal";
 import ProceduresList from "../src/Components/UserProcedureList/UserProceduresList";
 import CreateProcedure from "./Components/CreateProcedure/CreateProcedure";
+import RegisterModal from "./Components/Modals/RegisterModal";
 
 function App() {
   const [user, setUser] = useState(null);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
+  const [registerModalOpen, setRegisterModalOpen] = useState(false);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -36,6 +38,15 @@ function App() {
             <LoginModal
               opened={open}
               onClose={() => setLoginModalOpen(false)}
+            />
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <RegisterModal
+              opened={open}
+              onClose={() => setRegisterModalOpen(false)}
             />
           }
         />
