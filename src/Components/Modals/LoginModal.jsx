@@ -38,6 +38,9 @@ export default function LoginModal({ opened, onClose }) {
       console.error("Login error", error);
     }
   };
+  const handleClose = () => {
+    navigate("/");
+  };
   const fields = [
     {
       name: "email",
@@ -58,7 +61,7 @@ export default function LoginModal({ opened, onClose }) {
   return (
     <FormModal
       opened={open}
-      onClose={close}
+      onClose={handleClose}
       title="Login"
       fields={fields}
       onSubmit={handleLogin}

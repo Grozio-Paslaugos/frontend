@@ -12,6 +12,7 @@ import LoginModal from "./Components/Modals/LoginModal";
 import ProceduresList from "../src/Components/UserProcedureList/UserProceduresList";
 import CreateProcedure from "./Components/CreateProcedure/CreateProcedure";
 import RegisterModal from "./Components/Modals/RegisterModal";
+import Footer from "./Components/Footer/Footer";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -31,6 +32,7 @@ function App() {
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Home />} />
           <Route path="my-procedures" element={<UserProceduresList />} />
+          <Route path="/create-procedure" element={<CreateProcedure />} />
         </Route>
         <Route
           path="/login"
@@ -55,10 +57,10 @@ function App() {
           element={
             <>
               <Header user={user} />
+              <Footer />
             </>
           }
         />
-        <Route path="/create-procedure" element={<CreateProcedure />} />
       </Routes>
     </Router>
   );

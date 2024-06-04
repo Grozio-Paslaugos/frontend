@@ -34,6 +34,9 @@ export default function RegisterModal({ opened, onClose }) {
       setError(error.message);
     }
   };
+  const handleClose = () => {
+    navigate("/");
+  };
   const fields = [
     {
       name: "name",
@@ -67,7 +70,7 @@ export default function RegisterModal({ opened, onClose }) {
   return (
     <FormModal
       opened={open}
-      onClose={close}
+      onClose={handleClose}
       title="Register"
       fields={fields}
       onSubmit={handleRegister}
