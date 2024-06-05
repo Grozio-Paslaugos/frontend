@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   HoverCard,
   Group,
@@ -11,6 +11,7 @@ import {
   Center,
   Box,
   Burger,
+  UnstyledButton,
   useMantineTheme,
 } from "@mantine/core";
 import { IconChevronDown } from "@tabler/icons-react";
@@ -18,25 +19,75 @@ import classes from "./Header.module.css";
 import { useNavigate } from "react-router-dom";
 import { useDisclosure } from "@mantine/hooks";
 
-const Header = () => {
+const Header = ({ onCategorySelect }) => {
+  const [categories, setCategories] = useState([]);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
   const theme = useMantineTheme();
-  const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
-    useDisclosure(false);
-  const [linksOpened, { toggle: toggleLinks }] = useDisclosure(false);
+  const [selectedCategory, setSelectedCategory] = useState("");
+  // const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
+  //   useDisclosure(false);
+  // const [linksOpened, { toggle: toggleLinks }] = useDisclosure(false);
   const [user, setUser] = useState(null);
+
+  const handleCategorySelect = () => {
+    setSelectedCategory();
+  };
+
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
   }, []);
+
   const handleLogout = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("token");
     navigate("/");
     setUser(null);
   };
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const token = localStorage.getItem("token");
+      try {
+        const response = await fetch(
+          "http://localhost:5000/api/categories/cat",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setCategories(data);
+        } else {
+          console.error("Error fetching categories:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+        setError(error.message);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  const links = categories?.map((category) => (
+    <UnstyledButton
+      className={classes.subLink}
+      key={category}
+      onClick={() => handleCategorySelect(category)}
+    >
+      <Text size="sm" fw={500}>
+        {category}
+      </Text>
+    </UnstyledButton>
+  ));
 
   return (
     <Box pb={40} mt={20}>
@@ -82,22 +133,7 @@ const Header = () => {
                 <Divider my="sm" />
 
                 <SimpleGrid cols={1} spacing={0}>
-                  <Button
-                    className={`${classes.subLink} ${classes.linkButton}`} // Apply the button class
-                    onClick={() => navigate(`/category/1`)}
-                    size="sm"
-                    style={{ fontWeight: 500 }}
-                  >
-                    Category 1
-                  </Button>
-                  <Button
-                    className={`${classes.subLink} ${classes.linkButton}`} // Apply the button class
-                    onClick={() => navigate(`/category/2`)}
-                    size="sm"
-                    style={{ fontWeight: 500 }}
-                  >
-                    Category 2
-                  </Button>
+                  {links}
                 </SimpleGrid>
               </HoverCard.Dropdown>
               {user !== null && user.role === "user" && (
@@ -152,11 +188,11 @@ const Header = () => {
             )}
           </Group>
 
-          <Burger
+          {/* <Burger
             opened={drawerOpened}
             onClick={toggleDrawer}
             hiddenFrom="sm"
-          />
+          /> */}
         </Group>
         <Divider className={classes.divider} mt="md" /> {}
       </header>

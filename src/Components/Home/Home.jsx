@@ -1,5 +1,8 @@
 import UserProceduresList from "../UserProcedureList/UserProceduresList";
 import ProceduresList from "../ProcedureList/ProcedureList";
+import { useState } from "react";
+import { TextInput } from "@mantine/core";
+import styles from "./Home.module.css";
 
 const procedures = [
   {
@@ -22,8 +25,18 @@ const procedures = [
   },
 ];
 export default function Home() {
+  const [searchQuery, setSearchQuery] = useState("");
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+  };
   return (
     <>
+      <TextInput
+        placeholder="Search"
+        value={searchQuery}
+        onChange={(e) => handleSearch(e.target.value)}
+        className={styles.search}
+      />
       <ProceduresList procedures={procedures} />
     </>
   );

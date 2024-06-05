@@ -18,6 +18,11 @@ function App() {
   const [user, setUser] = useState(null);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [registerModalOpen, setRegisterModalOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("");
+
+  const handleCategorySelect = () => {
+    setSelectedCategory();
+  };
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -30,7 +35,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<MainLayout />}>
-          <Route index element={<Home />} />
+          <Route index element={<Home selectedCategory={selectedCategory} />} />
           <Route path="my-procedures" element={<UserProceduresList />} />
           <Route path="/create-procedure" element={<CreateProcedure />} />
         </Route>
@@ -56,7 +61,7 @@ function App() {
           path="*"
           element={
             <>
-              <Header user={user} />
+              <Header user={user} onCategorySelect={handleCategorySelect} />
               <Footer />
             </>
           }
