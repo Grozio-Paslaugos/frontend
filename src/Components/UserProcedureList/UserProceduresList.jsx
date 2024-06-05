@@ -3,17 +3,29 @@
 import { Container, Title, Divider, TextInput } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import classes from "./UserProceduresList.module.css";
+import axios from "axios";
 
 const UserProceduresList = () => {
   const navigate = useNavigate();
 
-  // Updated dummy data for demonstration
-  const procedures = [
-    { _id: 1, description: "Dental Checkup" },
-    { _id: 2, description: "Eye Exam" },
-    { _id: 3, description: "Annual Physical" },
-    { _id: 4, description: "Blood Test" },
-  ];
+  const [procedures, setProcedures] = useState([]);
+
+  useEffect(() => {
+    const fetchProcedures = async () => {
+      try {
+        const response = await axios.get("/api/procedures");
+        setProcedures(response.data);
+      } catch (error) {
+        console.error("Error fetching procedures:", error);
+      }
+    };
+
+    fetchProcedures();
+  }, []);
+
+  const totalRatings = ratings.length;
+  
+  const averageRating = totalRatings > 0 ? ratings.reduce((acc, rating) => acc + rating, 0) / totalRatings : 0;
 
   const searchQuery = "";
   return (

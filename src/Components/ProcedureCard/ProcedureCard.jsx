@@ -11,7 +11,8 @@ import {
 
 const ProcedureCard = ({ procedure }) => {
   const theme = useMantineTheme();
-  const { name, category, picture, rating } = procedure;
+  const { name, category, picture, averageRating, totalRatings, price, data } =
+    procedure;
 
   return (
     <Card shadow="sm" padding="lg" style={{ maxWidth: 340 }}>
@@ -27,9 +28,24 @@ const ProcedureCard = ({ procedure }) => {
       </Group>
 
       <Group position="apart" mt={10}>
-        <Text>Rating</Text>
-        <Rating value={rating} readOnly />
+        <Text>Price:</Text>
+        <Text color="green">{price} €</Text>
       </Group>
+   {data && (
+        <Group mt={10}>
+          <Text size="sm"> 
+            Appointment: {data}
+          </Text>
+        </Group>
+      )}
+
+      <Group position="apart" mt={10}>
+        <Text>Rating:</Text>
+        <Rating value={averageRating} readOnly />
+        <Text color="blue">({totalRatings})</Text>
+      </Group>
+
+   
     </Card>
   );
 };
