@@ -1,0 +1,40 @@
+/** @format */
+
+.card {
+  max-width: 340px;
+}
+
+.cardImage {
+  height: 160px;
+}
+
+.cardTitle {
+  font-weight: 500;
+}
+
+.cardBadge {
+  color: pink;
+}
+
+.cardButton {
+  width: 100%;
+  margin-top: 16px;
+  background-color: blue;
+  color: white;
+}
+
+.modalButton {
+  width: 100%;
+  margin-top: 16px;
+  background-color: green;
+  color: white;
+}
+
+.selectedDateTimeGroup {
+  justify-content: space-between;
+  margin-top: 16px;
+}
+
+.selectedDateTimeText {
+  font-weight: bold;
+}

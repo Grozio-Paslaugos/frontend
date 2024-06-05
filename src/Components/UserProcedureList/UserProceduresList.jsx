@@ -1,21 +1,28 @@
 /** @format */
 
-import { Container, Title, Divider, TextInput } from "@mantine/core";
+import React, { useState } from "react";
+import {
+  Container,
+  Title,
+  Divider,
+  TextInput,
+  Group,
+  Card,
+  Text,
+} from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import classes from "./UserProceduresList.module.css";
+import { useProcedures } from "./ProceduresContext";
 
 const UserProceduresList = () => {
   const navigate = useNavigate();
+  const { registeredProcedures } = useProcedures();
+  const [searchQuery, setSearchQuery] = useState("");
 
-  // Updated dummy data for demonstration
-  const procedures = [
-    { _id: 1, description: "Dental Checkup" },
-    { _id: 2, description: "Eye Exam" },
-    { _id: 3, description: "Annual Physical" },
-    { _id: 4, description: "Blood Test" },
-  ];
+  const filteredProcedures = registeredProcedures.filter((procedure) =>
+    procedure.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
-  const searchQuery = "";
   return (
     <Container fluid>
       <a className={classes.link} href="/" onClick={() => navigate("/")}>
@@ -27,16 +34,25 @@ const UserProceduresList = () => {
       <TextInput
         placeholder="Search"
         value={searchQuery}
-        onChange={() => {}}
-        className={classes.search} // Assuming you have defined styles for search in your CSS module
+        onChange={(event) => setSearchQuery(event.currentTarget.value)}
+        className={classes.search}
       />
       <div className={classes.proceduresList}>
-        {procedures.length > 0 ? (
-          procedures.map((procedure) => (
-            <div key={procedure._id}>
-              {console.log(procedure)}
-              <div>{procedure.description}</div>
-            </div>
+        {filteredProcedures.length > 0 ? (
+          filteredProcedures.map((procedure) => (
+            <Card
+              key={procedure.id}
+              shadow="sm"
+              padding="lg"
+              className={classes.card}
+            >
+              <Group position="apart">
+                <Text className={classes.cardTitle}>{procedure.name}</Text>
+                <Text className={classes.cardDateTime}>
+                  {new Date(procedure.selectedDateTime).toLocaleString()}
+                </Text>
+              </Group>
+            </Card>
           ))
         ) : (
           <p>No procedures found</p>
