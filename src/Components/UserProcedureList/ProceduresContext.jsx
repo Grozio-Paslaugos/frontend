@@ -8,6 +8,8 @@ export const ProceduresProvider = ({ children }) => {
   const [registeredProcedures, setRegisteredProcedures] = useState([]);
 
   const addProcedure = (procedure) => {
+    // Ensure each procedure has a unique id
+    procedure.id = Date.now(); // You can use a more robust method for generating unique IDs
     setRegisteredProcedures((prev) => [...prev, procedure]);
   };
 

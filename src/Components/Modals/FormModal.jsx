@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Modal, TextInput, Button } from "@mantine/core";
-import { useNavigate } from "react-router-dom";
 
 export default function FormModal({
   opened,

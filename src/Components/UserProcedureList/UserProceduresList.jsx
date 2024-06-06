@@ -1,6 +1,4 @@
-/** @format */
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Container,
   Title,
@@ -12,16 +10,50 @@ import {
 } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import classes from "./UserProceduresList.module.css";
-import { useProcedures } from "./ProceduresContext";
 
 const UserProceduresList = () => {
   const navigate = useNavigate();
-  const { registeredProcedures } = useProcedures();
   const [searchQuery, setSearchQuery] = useState("");
+  const [procedures, setProcedures] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const filteredProcedures = registeredProcedures.filter((procedure) =>
+  useEffect(() => {
+    const fetchProcedures = async () => {
+      const token = localStorage.getItem('token');
+      const user = JSON.parse(localStorage.getItem('user'));
+      try {
+        const response = await fetch(`http://localhost:5000/api/procedures/user/${user._id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (!response.ok) {
+          throw new Error('Failed to fetch procedures');
+        }
+        const data = await response.json();
+        setProcedures(data.filter(procedure => procedure.status === 'approved'));
+        setLoading(false);
+      } catch (error) {
+        setError(error.message);
+        setLoading(false);
+      }
+    };
+
+    fetchProcedures();
+  }, []);
+
+  const filteredProcedures = procedures.filter((procedure) =>
     procedure.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <Container fluid>
@@ -49,7 +81,7 @@ const UserProceduresList = () => {
               <Group position="apart">
                 <Text className={classes.cardTitle}>{procedure.name}</Text>
                 <Text className={classes.cardDateTime}>
-                  {new Date(procedure.selectedDateTime).toLocaleString()}
+                  {new Date(procedure.bookingDatetime).toLocaleString()}
                 </Text>
               </Group>
             </Card>

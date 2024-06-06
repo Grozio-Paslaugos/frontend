@@ -1,5 +1,3 @@
-/** @format */
-
 import React, { useState, useEffect } from "react";
 import {
   Card,
@@ -16,25 +14,40 @@ import { DatePicker } from "@mantine/dates";
 import styles from "./ProcedureCard.module.css";
 
 const ProcedureCard = ({ procedure }) => {
-  const { name, category, picture, rating } = procedure;
+  const { name, category, picture, rating, _id } = procedure;
   const [opened, setOpened] = useState(false);
   const [tempDate, setTempDate] = useState(null);
   const [tempTime, setTempTime] = useState(null);
   const [selectedDateTime, setSelectedDateTime] = useState(null);
   const [availableTimes, setAvailableTimes] = useState([]);
   const [isRegistered, setIsRegistered] = useState(false);
+  const [error, setError] = useState("");
+
+  const user = JSON.parse(localStorage.getItem("user"));
+  const userId = user ? user._id : null;
+
+  useEffect(() => {
+    const registeredProcedures = JSON.parse(localStorage.getItem("registeredProcedures"));
+    if (registeredProcedures) {
+      const procedureRegistration = registeredProcedures.find((p) => p.procedureId === _id);
+      if (procedureRegistration) {
+        setSelectedDateTime(new Date(procedureRegistration.bookingDatetime));
+        setIsRegistered(true);
+      }
+    }
+  }, [_id]);
 
   useEffect(() => {
     if (tempDate) {
       const times = generateAvailableTimes();
       setAvailableTimes(times);
     }
-  }, [tempDate]);
+  }, [tempDate, _id]);
 
   const generateAvailableTimes = () => {
     const times = [];
     let startTime = new Date(tempDate);
-    startTime.setHours(8, 30, 0, 0); // Set start time to 08:30 AM
+    startTime.setHours(8, 30, 0, 0);
 
     while (
       startTime.getHours() < 16 ||
@@ -52,7 +65,12 @@ const ProcedureCard = ({ procedure }) => {
     return times;
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
+    if (!userId || !_id) {
+      setError("User ID or Procedure ID is missing");
+      return;
+    }
+
     const selectedDateTime = new Date(tempDate);
     const [hours, minutes] = tempTime.split(":");
     selectedDateTime.setHours(hours);
@@ -62,13 +80,46 @@ const ProcedureCard = ({ procedure }) => {
     setOpened(false);
     setIsRegistered(true);
 
-    // Further logic for confirming the date and time selection can go here
-    console.log("Confirmed date and time:", selectedDateTime);
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await fetch("http://localhost:5000/api/procedures/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          userId,
+          procedureId: _id,
+          bookingDatetime: selectedDateTime,
+          status: 'pending'
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        setError(errorData.message || "Error registering to procedure");
+      } else {
+        const data = await response.json();
+        const registeredProcedures = JSON.parse(localStorage.getItem("registeredProcedures")) || [];
+        registeredProcedures.push(data);
+        localStorage.setItem("registeredProcedures", JSON.stringify(registeredProcedures));
+        setError("");
+      }
+    } catch (error) {
+      setError("Error creating booking: " + error.message);
+    }
   };
 
   const handleCancel = () => {
     setSelectedDateTime(null);
     setIsRegistered(false);
+    setError("");
+
+    const registeredProcedures = JSON.parse(localStorage.getItem("registeredProcedures")) || [];
+    const updatedProcedures = registeredProcedures.filter((p) => p.procedureId !== _id);
+    localStorage.setItem("registeredProcedures", JSON.stringify(updatedProcedures));
   };
 
   return (
@@ -140,6 +191,7 @@ const ProcedureCard = ({ procedure }) => {
         >
           Confirm Date and Time
         </Button>
+        {error && <Text color="red">{error}</Text>}
       </Modal>
     </>
   );
