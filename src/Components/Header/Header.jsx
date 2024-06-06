@@ -53,14 +53,14 @@ const Header = ({ onCategorySelect }) => {
       const token = localStorage.getItem("token");
       try {
         const response = await fetch(
-          "http://localhost:5000/api/categories/cat",
+          "http://localhost:5000/api/categories/categories",
           {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
-          }
+          },
         );
         if (response.ok) {
           const data = await response.json();
