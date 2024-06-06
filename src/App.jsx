@@ -7,12 +7,12 @@ import "./App.css";
 import Header from "./Components/Header/Header";
 import UserProceduresList from "../src/Components/UserProcedureList/UserProceduresList";
 import MainLayout from "./Components/MainLayout/MainLayout";
-import Home from "./Components/Home/Home";
 import LoginModal from "./Components/Modals/LoginModal";
-import ProceduresList from "../src/Components/UserProcedureList/UserProceduresList";
 import CreateProcedure from "./Components/CreateProcedure/CreateProcedure";
 import RegisterModal from "./Components/Modals/RegisterModal";
 import Footer from "./Components/Footer/Footer";
+
+import AllProcedures from "./Components/AllProcedures/AllProcedures";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -35,7 +35,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<MainLayout />}>
-          <Route index element={<Home selectedCategory={selectedCategory} />} />
+          <Route index element={<AllProcedures />} />
           <Route path="my-procedures" element={<UserProceduresList />} />
           <Route path="/create-procedure" element={<CreateProcedure />} />
         </Route>

@@ -1,49 +1,56 @@
 /** @format */
 
+import React, { useEffect, useState } from "react";
 import { Container, Title, Divider, TextInput } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import classes from "./UserProceduresList.module.css";
 
 const UserProceduresList = () => {
-  const navigate = useNavigate();
+  const [bookings, setBookings] = useState([]);
 
-  // Updated dummy data for demonstration
-  const procedures = [
-    { _id: 1, description: "Dental Checkup" },
-    { _id: 2, description: "Eye Exam" },
-    { _id: 3, description: "Annual Physical" },
-    { _id: 4, description: "Blood Test" },
-  ];
+  useEffect(() => {
+    const fetchUserBookings = async () => {
+      const token =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NThmYzFlMDEzZWVkN2M5NTAwMGQ5OCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTcxNzE1NDY0OSwiZXhwIjoxNzE3MTU4MjQ5fQ.b4yljnXGkDP883mAhzkkuKy-TdI628M2Wh6hO2HcShg";
+      const userId = "6658fc1e013eed7c95000d98";
 
-  const searchQuery = "";
+      try {
+        const response = await fetch(
+          `http://localhost:5000/api/bookings/user/${userId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setBookings(data);
+        } else {
+          console.error(
+            "Failed to fetch user-specific bookings",
+            response.statusText,
+          );
+        }
+      } catch (error) {
+        console.error("Error fetching user-specific bookings:", error);
+      }
+    };
+
+    fetchUserBookings();
+  }, []);
+
   return (
-    <Container fluid>
-      <a className={classes.link} href="/" onClick={() => navigate("/")}>
-        Home
-      </a>
-      <Title align="center" mb="lg">
-        My Procedures
-      </Title>
-      <TextInput
-        placeholder="Search"
-        value={searchQuery}
-        onChange={() => {}}
-        className={classes.search} // Assuming you have defined styles for search in your CSS module
-      />
-      <div className={classes.proceduresList}>
-        {procedures.length > 0 ? (
-          procedures.map((procedure) => (
-            <div key={procedure._id}>
-              {console.log(procedure)}
-              <div>{procedure.description}</div>
-            </div>
-          ))
-        ) : (
-          <p>No procedures found</p>
-        )}
-      </div>
-      <Divider className={classes.divider} mt="md" />
-    </Container>
+    <ul>
+      {bookings.map((booking) => (
+        <li key={booking._id}>
+          Booking ID: {booking._id}, Procedure: {booking.procedure_id.name},
+          Date: {new Date(booking.booking_datetime).toLocaleString()}
+        </li>
+      ))}
+    </ul>
   );
 };
 

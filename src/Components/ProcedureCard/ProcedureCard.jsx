@@ -10,25 +10,27 @@ import {
 } from "@mantine/core";
 
 const ProcedureCard = ({ procedure }) => {
-  const theme = useMantineTheme();
-  const { name, category, picture, rating } = procedure;
-
   return (
-    <Card shadow="sm" padding="lg" style={{ maxWidth: 340 }}>
+    <Card
+      shadow="sm"
+      padding="lg"
+      radius="md"
+      withBorder
+      style={{ height: "350px", width: "100%" }}
+    >
       <Card.Section>
-        <Image src={picture} alt={name} height={160} />
+        <Image
+          src={procedure.image}
+          alt="https://us-tuna-sounds-images.voicemod.net/78f23c41-369a-4769-9568-7aae749c4e06-1704762972412.jpg"
+          height={250}
+          width={250}
+          style={{ objectFit: "fill" }}
+        />
       </Card.Section>
-
-      <Group position="apart" mt={"md"}>
-        <Text weight={500}>{name}</Text>
-        <Badge color="pink" variant="light">
-          {category}
-        </Badge>
-      </Group>
-
-      <Group position="apart" mt={10}>
-        <Text>Rating</Text>
-        <Rating value={rating} readOnly />
+      <Group justify="space-between" mt="md" mb="xs">
+        <Text fw={500}>{procedure.name}</Text>
+        <Text fw={500}>{procedure.category}</Text>
+        <Text fw={500}>{procedure.date}</Text>
       </Group>
     </Card>
   );
