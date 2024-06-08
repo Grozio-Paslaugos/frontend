@@ -1,18 +1,20 @@
-/** @format */
-
 import React, { useEffect, useState } from "react";
-import { Container, Title, Divider, TextInput } from "@mantine/core";
-import { useNavigate } from "react-router-dom";
-import classes from "./UserProceduresList.module.css";
+import { Container, Title, Divider, SimpleGrid } from "@mantine/core";
+import ProcedureCard from "../ProcedureCard/ProcedureCard"; // Ensure this path is correct
 
 const UserProceduresList = () => {
   const [bookings, setBookings] = useState([]);
 
   useEffect(() => {
     const fetchUserBookings = async () => {
-      const token =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NThmYzFlMDEzZWVkN2M5NTAwMGQ5OCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTcxNzE1NDY0OSwiZXhwIjoxNzE3MTU4MjQ5fQ.b4yljnXGkDP883mAhzkkuKy-TdI628M2Wh6hO2HcShg";
-      const userId = "6658fc1e013eed7c95000d98";
+      const token = localStorage.getItem("token");
+      const user = JSON.parse(localStorage.getItem("user"));
+      const userId = user?._id;
+
+      if (!token || !userId) {
+        console.error("User is not logged in or token is missing");
+        return;
+      }
 
       try {
         const response = await fetch(
@@ -23,16 +25,15 @@ const UserProceduresList = () => {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
-          },
+          }
         );
+
         if (response.ok) {
           const data = await response.json();
           setBookings(data);
         } else {
-          console.error(
-            "Failed to fetch user-specific bookings",
-            response.statusText,
-          );
+          const errorText = await response.text();
+          console.error("Failed to fetch user-specific bookings:", errorText);
         }
       } catch (error) {
         console.error("Error fetching user-specific bookings:", error);
@@ -42,15 +43,32 @@ const UserProceduresList = () => {
     fetchUserBookings();
   }, []);
 
+  const handleCancel = (procedureId) => {
+    setBookings((prevBookings) =>
+      prevBookings.filter((booking) => booking.procedure_id._id !== procedureId)
+    );
+  };
+
   return (
-    <ul>
-      {bookings.map((booking) => (
-        <li key={booking._id}>
-          Booking ID: {booking._id}, Procedure: {booking.procedure_id.name},
-          Date: {new Date(booking.booking_datetime).toLocaleString()}
-        </li>
-      ))}
-    </ul>
+    <Container>
+      <Title>My Procedures</Title>
+      <Divider my="md" />
+      {bookings.length === 0 ? (
+        <p>No bookings found.</p>
+      ) : (
+        <SimpleGrid cols={3} spacing="lg">
+          {bookings.map((booking) => (
+            <ProcedureCard
+              key={booking._id}
+              procedure={booking.procedure_id}
+              userId={booking.user_id}
+              isUserProcedure={true}
+              onCancel={handleCancel}
+            />
+          ))}
+        </SimpleGrid>
+      )}
+    </Container>
   );
 };
 
