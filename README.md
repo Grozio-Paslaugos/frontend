@@ -1,8 +1,53 @@
-# React + Vite
+# GROŽIO PASLAUGŲ WEB APP
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# OVERVIEW
 
-Currently, two official plugins are available:
+(pildoma)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+
+# KEY FEATURES
+
+(pildoma)
+
+# TECH STACK
+
+- React
+- MongoDB
+- Node.js
+- Express
+- CORS
+- jsonwebtoken
+
+# USAGE AND INSTALLATION
+
+1. Clone the repository:
+
+- git clone https://github.com/Grozio-Paslaugos/frontend.git
+- cd frontend
+
+1. Install dependencies:
+
+- npm install or npm i
+
+1. Run the application:
+
+- npm run dev
+
+# LOGINS FOR TESTING
+
+- Paprastas: basic@gmail.com / basic123
+
+
+# CONTRIBUTORS
+
+- KESTUTIS GIRDZIUNAS
+- KAROLIS LAPIENIS
+- LAURYNAS JOKŠAS
+- LAURYNAS ŠAPNAGIS
+- TAUTVYDAS KREIVYS
+- GRANTAS ADOMAITIS
+
+# ACKNOWLEDGMENTS
+
+- Special thanks to EVELINA MARCINKEVICIENE for inspiration and guidance.
+
