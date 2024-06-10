@@ -47,8 +47,8 @@ const CalendarModal = ({ opened, onClose, procedureId, bookingId, isEditMode, on
   ];
 
   const handleSubmit = async () => {
-    if (!selectedDate || !selectedTime) {
-      console.error("Date or time not selected");
+    if (!selectedDate || !selectedTime || !userId || !procedureId) {
+      console.error("Date, time, user, or procedure not selected");
       return;
     }
 
@@ -58,13 +58,13 @@ const CalendarModal = ({ opened, onClose, procedureId, bookingId, isEditMode, on
     bookingDate.setMinutes(minutes);
 
     const bookingData = {
-      user_id: userId,
-      procedure_id: procedureId,
-      booking_datetime: bookingDate.toISOString(),
+      userId,
+      procedureId,
+      bookingDatetime: bookingDate.toISOString(),
     };
 
-    if (!userId || !token) {
-      console.error("User is not logged in or token is missing");
+    if (!token) {
+      console.error("Token is missing");
       return;
     }
 
