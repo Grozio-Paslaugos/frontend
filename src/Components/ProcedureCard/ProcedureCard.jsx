@@ -1,11 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, Image, Text, Group, Button } from "@mantine/core";
 import CalendarModal from "../Modals/CalendarModal";
 
-const ProcedureCard = ({ procedure, userId, isUserProcedure, onCancel }) => {
+const ProcedureCard = ({ procedure, userId, bookingId, bookingDateTime, isUserProcedure, onCancel, onUpdate }) => {
   const [modalOpened, setModalOpened] = useState(false);
   const [editMode, setEditMode] = useState(false);
-  const [bookingId, setBookingId] = useState(null);
+  const [formattedDate, setFormattedDate] = useState('');
+  const [formattedTime, setFormattedTime] = useState('');
+
+  useEffect(() => {
+    console.log("Received bookingDateTime:", bookingDateTime);
+    if (bookingDateTime) {
+      const bookingDate = new Date(bookingDateTime);
+      console.log("Parsed Booking Date:", bookingDate);
+      if (!isNaN(bookingDate.getTime())) {
+        setFormattedDate(bookingDate.toLocaleDateString());
+        setFormattedTime(bookingDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+      } else {
+        console.error("Invalid Date format:", bookingDateTime);
+      }
+    }
+  }, [bookingDateTime]);
 
   const handleBookClick = () => {
     setEditMode(false);
@@ -14,34 +29,7 @@ const ProcedureCard = ({ procedure, userId, isUserProcedure, onCancel }) => {
 
   const handleEditClick = () => {
     setEditMode(true);
-    setBookingId(procedure._id);
     setModalOpened(true);
-  };
-  const handleCancelClick = async () => {
-    const token = localStorage.getItem("token");
-
-    try {
-      const response = await fetch(
-        `http://localhost:5000/api/bookings/delete/${procedure._id}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (response.ok) {
-        console.log("Procedure cancelled successfully");
-        onCancel(procedure._id);
-      } else {
-        const errorText = await response.text();
-        console.error("Failed to cancel procedure:", errorText);
-      }
-    } catch (error) {
-      console.error("Error cancelling procedure:", error);
-    }
   };
 
   return (
@@ -65,11 +53,16 @@ const ProcedureCard = ({ procedure, userId, isUserProcedure, onCancel }) => {
         <Group position="apart" mt="md" mb="xs">
           <Text fw={500}>{procedure.name}</Text>
           <Text fw={500}>{procedure.category}</Text>
-          <Text fw={500}>{procedure.date}</Text>
         </Group>
+        {isUserProcedure && (
+          <>
+            <Text fw={500}>Booked Date: {formattedDate || "N/A"}</Text>
+            <Text fw={500}>Booked Time: {formattedTime || "N/A"}</Text>
+          </>
+        )}
         {isUserProcedure ? (
           <>
-            <Button fullWidth mt="md" color="red" onClick={handleCancelClick}>
+            <Button fullWidth mt="md" color="red" onClick={() => onCancel(bookingId)}>
               Cancel Procedure
             </Button>
             <Button fullWidth mt="md" color="blue" onClick={handleEditClick}>
@@ -89,6 +82,7 @@ const ProcedureCard = ({ procedure, userId, isUserProcedure, onCancel }) => {
         userId={userId}
         bookingId={bookingId}
         isEditMode={editMode}
+        onUpdate={onUpdate}
       />
     </>
   );
