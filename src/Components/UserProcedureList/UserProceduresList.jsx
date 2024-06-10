@@ -30,6 +30,7 @@ const UserProceduresList = () => {
 
         if (response.ok) {
           const data = await response.json();
+          console.log("Fetched bookings:", data);
           setBookings(data);
         } else {
           const errorText = await response.text();
@@ -43,9 +44,40 @@ const UserProceduresList = () => {
     fetchUserBookings();
   }, []);
 
-  const handleCancel = (procedureId) => {
+  const handleCancel = async (bookingId) => {
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/bookings/delete/${bookingId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.ok) {
+        console.log("Procedure cancelled successfully");
+        setBookings((prevBookings) =>
+          prevBookings.filter((booking) => booking._id !== bookingId)
+        );
+      } else {
+        const errorText = await response.text();
+        console.error("Failed to cancel procedure:", errorText);
+      }
+    } catch (error) {
+      console.error("Error cancelling procedure:", error);
+    }
+  };
+
+  const handleUpdate = (bookingId, newDateTime) => {
     setBookings((prevBookings) =>
-      prevBookings.filter((booking) => booking.procedure_id._id !== procedureId)
+      prevBookings.map((booking) =>
+        booking._id === bookingId ? { ...booking, booking_datetime: newDateTime } : booking
+      )
     );
   };
 
@@ -62,8 +94,11 @@ const UserProceduresList = () => {
               key={booking._id}
               procedure={booking.procedure_id}
               userId={booking.user_id}
+              bookingId={booking._id}
+              bookingDateTime={booking.booking_datetime}
               isUserProcedure={true}
               onCancel={handleCancel}
+              onUpdate={handleUpdate}
             />
           ))}
         </SimpleGrid>
